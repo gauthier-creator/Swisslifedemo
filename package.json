@@ -1,0 +1,28 @@
+{
+  "name": "cryptovault",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CryptoVault by Fraktion — Custody-as-a-Service for Swiss Life",
+  "author": "Fraktion <contact@fraktion.io>",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "build:api": "npm run build --workspace=apps/api",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "build:portal": "npm run build --workspace=apps/onboarding-portal",
+    "dev:portal": "npm run dev --workspace=apps/onboarding-portal"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

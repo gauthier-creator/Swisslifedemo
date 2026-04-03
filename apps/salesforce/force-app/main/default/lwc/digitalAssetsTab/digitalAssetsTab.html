@@ -1,0 +1,68 @@
+<template>
+    <lightning-card title="Digital Assets" icon-name="custom:custom19">
+        <div class="slds-p-around_medium">
+            <!-- KYC Status Banner -->
+            <template if:true={kycPending}>
+                <div class="slds-notify slds-notify_alert slds-alert_warning slds-m-bottom_medium" role="alert">
+                    <span class="slds-assistive-text">warning</span>
+                    <h2>KYC en attente — Le client doit completer sa verification avant d'acceder aux services crypto.</h2>
+                </div>
+            </template>
+
+            <!-- Portfolio Summary -->
+            <template if:true={hasPositions}>
+                <div class="slds-grid slds-gutters slds-m-bottom_large">
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-box slds-theme_shade">
+                            <p class="slds-text-title">Total AuC</p>
+                            <p class="slds-text-heading_large">{totalAucFormatted}</p>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-box slds-theme_shade">
+                            <p class="slds-text-title">Wallets Actifs</p>
+                            <p class="slds-text-heading_large">{walletCount}</p>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-box slds-theme_shade">
+                            <p class="slds-text-title">Statut KYC</p>
+                            <p class="slds-text-heading_large">{kycStatusLabel}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Positions Table -->
+                <lightning-datatable
+                    key-field="asset"
+                    data={positions}
+                    columns={positionColumns}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+
+            <!-- Actions -->
+            <div class="slds-m-top_large">
+                <lightning-button-group>
+                    <lightning-button
+                        label="Generer un depot"
+                        variant="brand"
+                        onclick={handleDeposit}>
+                    </lightning-button>
+                    <lightning-button
+                        label="Initier un retrait"
+                        onclick={handleWithdraw}>
+                    </lightning-button>
+                    <lightning-button
+                        label="Generer releve"
+                        onclick={handleStatement}>
+                    </lightning-button>
+                    <lightning-button
+                        label="Statut KYC"
+                        onclick={handleKycStatus}>
+                    </lightning-button>
+                </lightning-button-group>
+            </div>
+        </div>
+    </lightning-card>
+</template>

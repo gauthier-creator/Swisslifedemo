@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>CryptoVault Compliance — Read positions + AML reports + audit access</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>CryptoVault Compliance</label>
+    <classAccesses>
+        <apexClass>CryptoVaultController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>CryptoVaultService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+</PermissionSet>
