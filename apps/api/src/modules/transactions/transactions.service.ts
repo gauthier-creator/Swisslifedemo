@@ -66,7 +66,7 @@ export class TransactionsService {
       memo: dto.memo || null,
       travelRuleData: {
         originator: {
-          name: '', // Will be filled from client data
+          name: '',
           accountId: wallet.depositAddress,
           address: wallet.depositAddress,
         },
@@ -77,9 +77,9 @@ export class TransactionsService {
           vaspLei: dto.beneficiary.vaspLei,
         },
       },
-    });
+    } as Partial<Transaction>);
 
-    const saved = await this.transactionRepository.save(tx);
+    const saved = await this.transactionRepository.save(tx) as Transaction;
 
     await this.auditService.log(AuditAction.TRANSACTION_INITIATED, auditCtx, {
       entityType: 'transaction',

@@ -38,28 +38,27 @@ import { HealthModule } from './modules/health/health.module';
       useFactory: (config: ConfigService) => {
         const databaseUrl = process.env.DATABASE_URL;
 
-        const baseConfig = {
-          type: 'postgres' as const,
-          entities: [Client, Wallet, Transaction, AuditLog, KycRecord, AmlAlert],
-          synchronize: process.env.NODE_ENV !== 'production',
-          logging: process.env.NODE_ENV !== 'production',
-        };
-
         if (databaseUrl) {
           return {
-            ...baseConfig,
+            type: 'postgres' as const,
             url: databaseUrl,
+            entities: [Client, Wallet, Transaction, AuditLog, KycRecord, AmlAlert],
+            synchronize: process.env.NODE_ENV !== 'production',
+            logging: process.env.NODE_ENV !== 'production',
             ssl: { rejectUnauthorized: false },
           };
         }
 
         return {
-          ...baseConfig,
-          host: config.get('database.host'),
-          port: config.get('database.port'),
-          database: config.get('database.name'),
-          username: config.get('database.user'),
-          password: config.get('database.password'),
+          type: 'postgres' as const,
+          host: config.get<string>('database.host'),
+          port: config.get<number>('database.port'),
+          database: config.get<string>('database.name'),
+          username: config.get<string>('database.user'),
+          password: config.get<string>('database.password'),
+          entities: [Client, Wallet, Transaction, AuditLog, KycRecord, AmlAlert],
+          synchronize: process.env.NODE_ENV !== 'production',
+          logging: process.env.NODE_ENV !== 'production',
           ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: true } : false,
         };
       },
