@@ -2,13 +2,14 @@
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["npm install --ignore-scripts"]
+cmds = ["npm ci || npm install"]
 
 [phases.build]
-cmds = ["npm run build --workspace=apps/api"]
+cmds = [
+  "echo 'Build started at:' && date",
+  "cat apps/api/src/modules/transactions/transactions.service.ts | head -60 | tail -5",
+  "npm run build --workspace=apps/api"
+]
 
 [start]
 cmd = "node apps/api/dist/main"
-
-[options]
-no-cache = true
