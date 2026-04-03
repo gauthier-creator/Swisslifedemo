@@ -10,7 +10,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "build": "npm run build --workspace=apps/api",
+    "start": "node apps/api/dist/main",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
