@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 
 // Entities
@@ -35,12 +35,12 @@ import { HealthModule } from './modules/health/health.module';
     // Database — supports Railway DATABASE_URL or individual vars
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
+      useFactory: (config: ConfigService): TypeOrmModuleOptions => {
         const databaseUrl = process.env.DATABASE_URL;
 
         if (databaseUrl) {
           return {
-            type: 'postgres' as const,
+            type: 'postgres',
             url: databaseUrl,
             entities: [Client, Wallet, Transaction, AuditLog, KycRecord, AmlAlert],
             synchronize: process.env.NODE_ENV !== 'production',
@@ -50,12 +50,12 @@ import { HealthModule } from './modules/health/health.module';
         }
 
         return {
-          type: 'postgres' as const,
-          host: config.get<string>('database.host'),
-          port: config.get<number>('database.port'),
-          database: config.get<string>('database.name'),
-          username: config.get<string>('database.user'),
-          password: config.get<string>('database.password'),
+          type: 'postgres',
+          host: String(config.get('database.host') || 'localhost'),
+          port: Number(config.get('database.port') || 5432),
+          database: String(config.get('database.name') || 'cryptovault'),
+          username: String(config.get('database.user') || 'cryptovault'),
+          password: String(config.get('database.password') || ''),
           entities: [Client, Wallet, Transaction, AuditLog, KycRecord, AmlAlert],
           synchronize: process.env.NODE_ENV !== 'production',
           logging: process.env.NODE_ENV !== 'production',

@@ -51,35 +51,34 @@ export class TransactionsService {
     if (wallet.asset !== dto.asset) throw new BadRequestException(`Asset mismatch: wallet is ${wallet.asset}`);
 
     // 2. Create transaction in pending state
-    const tx = this.transactionRepository.create({
-      walletId: dto.walletId,
-      clientId: wallet.clientId,
-      type: TransactionType.WITHDRAWAL,
-      asset: dto.asset,
-      amount: dto.amount,
-      destinationAddress: dto.destinationAddress,
-      sourceAddress: wallet.depositAddress,
-      status: TransactionStatus.PENDING_AML,
-      initiatedBySalesforceUserId: dto.initiatedBy.salesforceUserId,
-      initiatedByRole: dto.initiatedBy.role,
-      initiatedByIp: dto.initiatedBy.ipAddress || null,
-      memo: dto.memo || null,
-      travelRuleData: {
-        originator: {
-          name: '',
-          accountId: wallet.depositAddress,
-          address: wallet.depositAddress,
-        },
-        beneficiary: {
-          name: dto.beneficiary.name,
-          accountType: dto.beneficiary.accountType,
-          vaspName: dto.beneficiary.vaspName,
-          vaspLei: dto.beneficiary.vaspLei,
-        },
+    const tx = new Transaction();
+    tx.walletId = dto.walletId;
+    tx.clientId = wallet.clientId;
+    tx.type = TransactionType.WITHDRAWAL;
+    tx.asset = dto.asset;
+    tx.amount = dto.amount;
+    tx.destinationAddress = dto.destinationAddress;
+    tx.sourceAddress = wallet.depositAddress;
+    tx.status = TransactionStatus.PENDING_AML;
+    tx.initiatedBySalesforceUserId = dto.initiatedBy.salesforceUserId;
+    tx.initiatedByRole = dto.initiatedBy.role;
+    tx.initiatedByIp = dto.initiatedBy.ipAddress || '';
+    tx.memo = dto.memo || '';
+    tx.travelRuleData = {
+      originator: {
+        name: '',
+        accountId: wallet.depositAddress,
+        address: wallet.depositAddress,
       },
-    } as Partial<Transaction>);
+      beneficiary: {
+        name: dto.beneficiary.name,
+        accountType: dto.beneficiary.accountType,
+        vaspName: dto.beneficiary.vaspName,
+        vaspLei: dto.beneficiary.vaspLei,
+      },
+    };
 
-    const saved = await this.transactionRepository.save(tx) as Transaction;
+    const saved = await this.transactionRepository.save(tx);
 
     await this.auditService.log(AuditAction.TRANSACTION_INITIATED, auditCtx, {
       entityType: 'transaction',
